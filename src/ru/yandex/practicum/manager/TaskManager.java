@@ -63,10 +63,10 @@ public class TaskManager {
     }
 
     public void deleteEpic(Integer id) {
-        if (!isEpicExist(id)) {
+        Epic epic = epics.get(id);
+        if (epic == null) {
             return;
         }
-        Epic epic = epics.get(id);
         for (Integer subtaskId : epic.getSubtasksId()) {
             subtasks.remove(subtaskId);
         }
@@ -90,7 +90,8 @@ public class TaskManager {
 
     public Subtask addSubtask(Subtask subtask) {
         Integer epicId = subtask.getEpicId();
-        if (!isEpicExist(epicId)) {
+        Epic epic = epics.get(epicId);
+        if (epic == null) {
             return null;
         }
 
@@ -98,7 +99,6 @@ public class TaskManager {
         subtask.setId(subtaskId);
         subtasks.put(subtaskId, subtask);
 
-        Epic epic = epics.get(epicId);
         epic.getSubtasksId().add(subtaskId);
         updateEpicStatus(epic);
         return subtask;
@@ -167,9 +167,5 @@ public class TaskManager {
     private void clearSubtasksFromEpic(Epic epic) {
         epic.getSubtasksId().clear();
         updateEpicStatus(epic);
-    }
-
-    private boolean isEpicExist(Integer epicId) {
-        return epics.containsKey(epicId);
     }
 }
