@@ -1,18 +1,20 @@
 package ru.yandex.practicum;
 
-import ru.yandex.practicum.manager.TaskManager;
+import ru.yandex.practicum.manager.*;
 import ru.yandex.practicum.models.*;
 
 public class Main {
-    private static TaskManager taskManager = new TaskManager();
+    private static InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
 
-        Task task1 = new Task("Тестовая задача", "Описание тестовой задачи", Status.NEW);
+        Task task1 = new Task("Тестовая задача", "Описание тестовой задачи");
+        // почему в строке ниже IDEA подчёркивает taskManager и пишет, что нет доступа к TaskManager
+        // хотя на самом деле доступ есть, ведь я импортировал пакет manager, и код компилируется?
         checkResult(taskManager.addTask(task1));
 
-        Task task2 = new Task("Тестовая задача #2", "Описание тестовой задачи #2", Status.NEW);
+        Task task2 = new Task("Тестовая задача #2", "Описание тестовой задачи #2");
         checkResult(taskManager.addTask(task2));
 
         Epic epic1 = new Epic("Эпик с двумя подзадачами", "Описание эпика с двумя подзадачами");
@@ -30,26 +32,14 @@ public class Main {
         Subtask subtask3 = new Subtask("Подзадача №3", "Описание подзадачи №1", epic2.getId());
         checkResult(taskManager.addSubtask(subtask3));
 
+        taskManager.getTask(task2.getId());
         printAllTasks();
-
-        task1.setTitle("Тестовая задача с др стат-м");
-        task1.setStatus(Status.IN_PROGRESS);
-        checkResult(taskManager.updateTask(task1));
-
-        subtask1.setTitle("Подзадача №1 c др стат-м");
-        subtask1.setStatus(Status.IN_PROGRESS);
-        checkResult(taskManager.updateSubtask(subtask1));
-
+        taskManager.getSubtask(subtask2.getId());
         printAllTasks();
-
-        taskManager.deleteTask(task1.getId());
-        taskManager.deleteEpic(epic1.getId());
-        taskManager.deleteSubtask(subtask3.getId());
-
+        taskManager.getEpic(epic1.getId());
         printAllTasks();
     }
 
-    // эти два метода я только для тестов создал (как и все проверки в main)
     private static void checkResult(Task task) {
         if (task != null) {
             System.out.println("Успешное действие с id " + task.getId());
@@ -59,8 +49,24 @@ public class Main {
     }
 
     private static void printAllTasks() {
-        System.out.println(taskManager.getAllTasks());
-        System.out.println(taskManager.getAllEpics());
-        System.out.println(taskManager.getAllSubtasks());
+        System.out.println("Задачи");
+        for (Task task : taskManager.getAllTasks()) {
+            System.out.println(task);
+        }
+
+        System.out.println("Эпики");
+        for (Epic epic : taskManager.getAllEpics()) {
+            System.out.println(epic);
+        }
+
+        System.out.println("Подзадачи");
+        for (Subtask subtask : taskManager.getAllSubtasks()) {
+            System.out.println(subtask);
+        }
+
+        System.out.println("История");
+        for (Task task : taskManager.getHistory()) {
+            System.out.println(task);
+        }
     }
 }
