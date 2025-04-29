@@ -1,5 +1,7 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum.manager.task;
 
+import ru.yandex.practicum.manager.history.*;
+import ru.yandex.practicum.manager.Managers;
 import ru.yandex.practicum.models.*;
 
 import java.util.ArrayList;
@@ -214,7 +216,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatus(status);
     }
 
-    private Integer generateId() {
+    public Integer generateId() {
         return id++;
     }
 

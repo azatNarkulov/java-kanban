@@ -1,8 +1,10 @@
-package test;
+package manager;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.manager.*;
+import ru.yandex.practicum.manager.task.*;
+import ru.yandex.practicum.manager.history.*;
+import ru.yandex.practicum.manager.Managers;
 
 class ManagersTest {
     @Test

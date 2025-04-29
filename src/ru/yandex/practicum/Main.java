@@ -1,6 +1,6 @@
 package ru.yandex.practicum;
 
-import ru.yandex.practicum.manager.*;
+import ru.yandex.practicum.manager.task.InMemoryTaskManager;
 import ru.yandex.practicum.models.*;
 
 public class Main {
@@ -10,8 +10,6 @@ public class Main {
         System.out.println("Поехали!");
 
         Task task1 = new Task("Тестовая задача", "Описание тестовой задачи");
-        // почему в строке ниже IDEA подчёркивает taskManager и пишет, что нет доступа к TaskManager
-        // хотя на самом деле доступ есть, ведь я импортировал пакет manager, и код компилируется?
         checkResult(taskManager.addTask(task1));
 
         Task task2 = new Task("Тестовая задача #2", "Описание тестовой задачи #2");

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum.manager.history;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -12,16 +12,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (history.size() == 10) {
             history.remove(0);
         }
-        history.add(task);
+        history.add(task.copy());
     }
 
     @Override
     public List<Task> getHistory() {
         return history;
-    }
-
-    @Override
-    public int getSize() {
-        return history.size();
     }
 }

@@ -1,8 +1,9 @@
-package test;
+package models;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.models.*;
+
+import ru.yandex.practicum.models.Task;
 
 class TaskTest {
     @Test
@@ -12,6 +13,6 @@ class TaskTest {
         Task task2 = new Task("Заголовок2", "Описание2");
         task2.setId(1);
 
-        Assertions.assertEquals(task1, task2, "Задачи должны быть одинаковыми");
+        assertEquals(task1, task2, "Задачи должны быть одинаковыми");
     }
 }

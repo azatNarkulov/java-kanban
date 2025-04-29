@@ -1,12 +1,14 @@
-package test;
+package manager.task;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.manager.*;
-import ru.yandex.practicum.models.*;
+
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import ru.yandex.practicum.manager.task.*;
+import ru.yandex.practicum.models.*;
 
 class InMemoryTaskManagerTest {
     InMemoryTaskManager taskManager;
@@ -42,14 +44,25 @@ class InMemoryTaskManagerTest {
     void canAddAndGetDifferentTasks() {
         Task task = new Task("Заголовок задачи", "Описание задачи");
         taskManager.addTask(task);
-        Epic epic = new Epic("Заголовок эпика", "Описание эпика");
-        taskManager.addEpic(epic);
-        Subtask subtask = new Subtask("Заголовок подзадачи", "Описание подзадачи", epic.getId());
-        taskManager.addSubtask(subtask);
-
 
         assertEquals(task, taskManager.getTask(task.getId()));
+    }
+
+    @Test
+    void canAddAndGetDifferentEpics() {
+        Epic epic = new Epic("Заголовок эпика", "Описание эпика");
+        taskManager.addEpic(epic);
+
         assertEquals(epic, taskManager.getEpic(epic.getId()));
+    }
+
+    @Test
+    void canAddAndGetDifferentSubtasks() {
+        Epic epic = new Epic("Заголовок эпика для подзадачи", "Описание эпика для подзадачи");
+        taskManager.addEpic(epic);
+        Subtask subtask = new Subtask("Заголовок подзадачи", "Описание подзадачи", 1);
+        taskManager.addSubtask(subtask);
+
         assertEquals(subtask, taskManager.getSubtask(subtask.getId()));
     }
 

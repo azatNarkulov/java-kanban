@@ -1,5 +1,7 @@
 package ru.yandex.practicum.models;
 
+import ru.yandex.practicum.manager.task.InMemoryTaskManager;
+
 import java.util.Objects;
 
 public class Task {
@@ -18,6 +20,13 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+    }
+
+    public Task(Task anotherTask) {
+        this.id = anotherTask.id;
+        this.title = anotherTask.title;
+        this.description = anotherTask.description;
+        this.status = anotherTask.status;
     }
 
     @Override
@@ -63,6 +72,10 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Task copy() {
+        return new Task(this);
     }
 
     @Override

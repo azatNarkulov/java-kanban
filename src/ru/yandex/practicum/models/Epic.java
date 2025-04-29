@@ -9,7 +9,17 @@ public class Epic extends Task {
         super(title, description);
     }
 
+    public Epic(Epic anotherEpic) {
+        super(anotherEpic);
+        this.subtasksId = anotherEpic.getSubtasksId();
+    }
+
     public ArrayList<Integer> getSubtasksId() {
         return subtasksId;
+    }
+
+    @Override
+    public Epic copy() {
+        return new Epic(this);
     }
 }

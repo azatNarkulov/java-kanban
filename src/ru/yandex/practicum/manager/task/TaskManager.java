@@ -1,4 +1,4 @@
-package ru.yandex.practicum.manager;
+package ru.yandex.practicum.manager.task;
 
 import ru.yandex.practicum.models.*;
 import java.util.ArrayList;
