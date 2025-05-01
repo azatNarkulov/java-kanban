@@ -1,4 +1,4 @@
-package manager;
+package ru.yandex.practicum.manager;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
@@ -8,13 +8,13 @@ import ru.yandex.practicum.manager.Managers;
 
 class ManagersTest {
     @Test
-    void returnTaskManager() {
+    void shouldReturnTaskManager() {
         TaskManager taskManager = Managers.getDefault();
         assertNotNull(taskManager);
     }
 
     @Test
-    void returnHistoryManager() {
+    void shouldReturnHistoryManager() {
         HistoryManager historyManager = Managers.getDefaultHistory();
         assertNotNull(historyManager);
     }

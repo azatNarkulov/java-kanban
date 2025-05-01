@@ -1,4 +1,4 @@
-package manager.history;
+package ru.yandex.practicum.manager.history;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.manager.history.*;

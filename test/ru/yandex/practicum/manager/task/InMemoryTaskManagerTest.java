@@ -1,4 +1,4 @@
-package manager.task;
+package ru.yandex.practicum.manager.task;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +19,12 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void impossibleAddEpicInEpic() {
+    void epicShouldNotBeAddedToEpicWithSameId() {
         Epic epic = new Epic("Заголовок эпика", "Описание эпика");
         taskManager.addEpic(epic);
         int epicId = epic.getId();
 
-        Subtask subtask = new Subtask("Заголовк подзадачи", "Описание подзадачи", epicId);
+        Subtask subtask = new Subtask("Заголовок подзадачи", "Описание подзадачи", epicId);
         subtask.setId(epicId);
         taskManager.addSubtask(subtask);
 
@@ -32,8 +32,8 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void impossibleAddSubtaskInSubtask() {
-        Subtask subtask = new Subtask("Заголовк подзадачи", "Описание подзадачи", 1);
+    void subtaskShouldNotBeAddedToSubtaskWithSameId() {
+        Subtask subtask = new Subtask("Заголовок подзадачи", "Описание подзадачи", 1);
         int epicId = subtask.getEpicId();
         taskManager.addSubtask(subtask);
 
