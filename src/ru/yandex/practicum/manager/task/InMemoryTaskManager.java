@@ -224,4 +224,8 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getSubtasksId().clear();
         updateEpicStatus(epic);
     }
+
+    public void remove(Task task) {
+        historyManager.remove(task);
+    }
 }

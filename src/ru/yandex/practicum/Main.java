@@ -9,33 +9,40 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Поехали!");
 
-        Task task1 = new Task("Тестовая задача", "Описание тестовой задачи");
+        Task task1 = new Task("Тестовая задача #1", "Описание тестовой задачи #1"); // 1
         checkResult(taskManager.addTask(task1));
-
-        Task task2 = new Task("Тестовая задача #2", "Описание тестовой задачи #2");
+        Task task2 = new Task("Тестовая задача #2", "Описание тестовой задачи #2"); // 2
         checkResult(taskManager.addTask(task2));
 
-        Epic epic1 = new Epic("Эпик с двумя подзадачами", "Описание эпика с двумя подзадачами");
+        Epic epic1 = new Epic("Эпик с тремя подзадачами", "Описание эпика с тремя подзадачами"); // 3
         checkResult(taskManager.addEpic(epic1));
-
-        Subtask subtask1 = new Subtask("Подзадача №1", "Описание подзадачи №1", epic1.getId());
+        Subtask subtask1 = new Subtask("Подзадача №1", "Описание подзадачи №1", epic1.getId()); // 4
         checkResult(taskManager.addSubtask(subtask1));
-
-        Subtask subtask2 = new Subtask("Подзадача №2", "Описание подзадачи №2", epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача №2", "Описание подзадачи №2", epic1.getId()); // 5
         checkResult(taskManager.addSubtask(subtask2));
-
-        Epic epic2 = new Epic("Эпик с одной подзадачей", "Описание эпика с одной подзадачей");
-        checkResult(taskManager.addEpic(epic2));
-
-        Subtask subtask3 = new Subtask("Подзадача №3", "Описание подзадачи №1", epic2.getId());
+        Subtask subtask3 = new Subtask("Подзадача №3", "Описание подзадачи №3", epic1.getId()); // 6
         checkResult(taskManager.addSubtask(subtask3));
 
-        taskManager.getTask(task2.getId());
-        printAllTasks();
+        Epic epic2 = new Epic("Эпик без подзадач", "Описание эпика без подзадач"); // 7
+        checkResult(taskManager.addEpic(epic2));
+
         taskManager.getSubtask(subtask2.getId());
-        printAllTasks();
         taskManager.getEpic(epic1.getId());
-        printAllTasks();
+        taskManager.getSubtask(subtask1.getId());
+        taskManager.getSubtask(subtask2.getId());
+        taskManager.getEpic(epic1.getId());
+        taskManager.getSubtask(subtask2.getId());
+        taskManager.getTask(task1.getId());
+
+        System.out.println(taskManager.getHistory());
+
+        taskManager.remove(subtask2);
+
+        System.out.println(taskManager.getHistory());
+
+        taskManager.remove(epic1);
+
+        System.out.println(taskManager.getHistory());
     }
 
     private static void checkResult(Task task) {
@@ -43,28 +50,6 @@ public class Main {
             System.out.println("Успешное действие с id " + task.getId());
         } else {
             System.out.println("Произошла ошибка");
-        }
-    }
-
-    private static void printAllTasks() {
-        System.out.println("Задачи");
-        for (Task task : taskManager.getAllTasks()) {
-            System.out.println(task);
-        }
-
-        System.out.println("Эпики");
-        for (Epic epic : taskManager.getAllEpics()) {
-            System.out.println(epic);
-        }
-
-        System.out.println("Подзадачи");
-        for (Subtask subtask : taskManager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-
-        System.out.println("История");
-        for (Task task : taskManager.getHistory()) {
-            System.out.println(task);
         }
     }
 }
