@@ -3,8 +3,6 @@ package ru.yandex.practicum.models;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import ru.yandex.practicum.models.Task;
-
 class TaskTest {
     @Test
     void tasksShouldBeEqualIfTheirIdAreEquals() {

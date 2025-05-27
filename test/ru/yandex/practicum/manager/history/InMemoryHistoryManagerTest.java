@@ -1,8 +1,6 @@
 package ru.yandex.practicum.manager.history;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.manager.history.*;
 import ru.yandex.practicum.models.*;
 import java.util.ArrayList;
 
