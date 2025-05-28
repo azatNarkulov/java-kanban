@@ -3,9 +3,9 @@ package ru.yandex.practicum.manager.history;
 import ru.yandex.practicum.models.Task;
 
 public class Node {
-    Node prev;
-    Task task;
-    Node next;
+    private Node prev;
+    private Task task;
+    private Node next;
 
     public Node(Node prev, Task task, Node next) {
         this.prev = prev;

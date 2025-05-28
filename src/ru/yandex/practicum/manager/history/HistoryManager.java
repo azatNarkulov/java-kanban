@@ -9,5 +9,5 @@ public interface HistoryManager {
 
     ArrayList<Task> getHistory(); // изменить возвращаемое значение
 
-    void remove(Task task);
+    void remove(int id);
 }

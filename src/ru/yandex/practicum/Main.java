@@ -36,11 +36,11 @@ public class Main {
 
         System.out.println(taskManager.getHistory());
 
-        taskManager.remove(subtask2);
+        taskManager.deleteSubtask(subtask2.getId());
 
         System.out.println(taskManager.getHistory());
 
-        taskManager.remove(epic1);
+        taskManager.deleteEpic(epic1.getId());
 
         System.out.println(taskManager.getHistory());
     }

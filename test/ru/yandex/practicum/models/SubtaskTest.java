@@ -1,11 +1,11 @@
 package ru.yandex.practicum.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SubtaskTest {
     @Test
-    void subtasksShouldBeEqualIfTheirIdAreEquals() {
+    void setId_returnSameSubtasks_ifIdAreEquals() {
         Subtask subtask1 = new Subtask("Заголовок1", "Описание1", 1);
         subtask1.setId(1);
         Subtask subtask2 = new Subtask("Заголовок2", "Описание2", 1);

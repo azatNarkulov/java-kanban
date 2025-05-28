@@ -1,9 +1,9 @@
 package ru.yandex.practicum.manager.history;
 
+import ru.yandex.practicum.models.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import ru.yandex.practicum.models.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private HashMap<Integer, Node> nodeMap = new HashMap<Integer, Node>();
@@ -25,8 +25,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public void remove(Task task) {
-        int id = task.getId();
+    public void remove(int id) {
         Node node = nodeMap.get(id);
         if (node != null) {
             removeNode(node);
@@ -40,7 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (oldTail == null) {
             head = node;
         } else {
-            oldTail.next = node;
+            oldTail.setNext(node);
         }
         nodeMap.put(task.getId(), node);
     }
@@ -49,26 +48,26 @@ public class InMemoryHistoryManager implements HistoryManager {
         ArrayList<Task> tasksArray = new ArrayList<>();
         Node current = head;
         while (current != null) {
-            tasksArray.add(current.task);
-            current = current.next;
+            tasksArray.add(current.getTask());
+            current = current.getNext();
         }
         return tasksArray;
     }
 
     private void removeNode(Node node) {
-        Node prev = node.prev;
-        Node next = node.next;
+        Node prev = node.getPrev();
+        Node next = node.getNext();
         if (prev != null) {
-            prev.next = next;
+            prev.setNext(next);
         } else {
             head = next;
         }
         if (next != null) {
-            next.prev = prev;
+            next.setPrev(prev);
         } else {
             tail = prev;
         }
-        nodeMap.remove(node.task.getId());
+        nodeMap.remove(node.getTask().getId());
 
     }
 }

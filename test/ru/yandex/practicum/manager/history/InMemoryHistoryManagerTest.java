@@ -1,23 +1,31 @@
 package ru.yandex.practicum.manager.history;
 
-import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.models.*;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-/*
-Я помню комментарий с ФЗ5 про то, что директорию test надо убрать под src, но у меня не получилось:
-после переноса папки настройки в IDEA слетели, и я не мог пометить test как test resources root.
-Параллельно одногруппники писали, что у них так тесты не работают,
-поэтому решил оставить test на одном уровне с src
- */
 
 class InMemoryHistoryManagerTest {
 
     @Test
-    void taskShouldBeAddedToMap() {
+    void add_removeOldFromHistory_addedTaskExistingInHistory() {
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        Task task = new Task("Заголовок задачи", "Описание задачи");
+        task.setId(1);
+        historyManager.add(task);
+
+        Task newTask = task.copy();
+        newTask.setTitle("Изменённый заголовок");
+        historyManager.add(newTask);
+        Task testTask = historyManager.getHistory().get(0);
+
+        assertEquals(newTask, testTask);
+    }
+
+    @Test
+    void add_addToMap() {
         HistoryManager historyManager = new InMemoryHistoryManager();
         Task task = new Task("Заголовок задачи", "Описание задачи");
         task.setId(1);
@@ -27,7 +35,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void taskShouldBeRemoved() {
+    void remove_removeFromHistory() {
         HistoryManager historyManager = new InMemoryHistoryManager();
         Task task = new Task("Заголовок задачи", "Описание задачи");
         task.setId(1);
@@ -35,7 +43,7 @@ class InMemoryHistoryManagerTest {
 
         ArrayList<Task> tasks1 = historyManager.getHistory();
 
-        historyManager.remove(task);
+        historyManager.remove(task.getId());
         ArrayList<Task> tasks2 = historyManager.getHistory();
 
         assertNotEquals(tasks1, tasks2);
