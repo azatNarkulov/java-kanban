@@ -1,7 +1,5 @@
 package ru.yandex.practicum.models;
 
-import ru.yandex.practicum.manager.task.InMemoryTaskManager;
-
 import java.util.Objects;
 
 public class Task {

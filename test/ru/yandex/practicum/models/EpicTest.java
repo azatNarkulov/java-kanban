@@ -1,13 +1,11 @@
 package ru.yandex.practicum.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-
-import ru.yandex.practicum.models.Epic;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
     @Test
-    void epicsShouldBeEqualIfTheirIdAreEquals() {
+    void setId_returnSameEpics_ifIdAreEquals() {
         Epic epic1 = new Epic("Заголовок1", "Описание1");
         epic1.setId(1);
         Epic epic2 = new Epic("Заголовок2", "Описание2");

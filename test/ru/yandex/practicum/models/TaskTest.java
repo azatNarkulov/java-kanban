@@ -1,13 +1,11 @@
 package ru.yandex.practicum.models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-
-import ru.yandex.practicum.models.Task;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TaskTest {
     @Test
-    void tasksShouldBeEqualIfTheirIdAreEquals() {
+    void setId_returnSameTasks_ifIdAreEquals() {
         Task task1 = new Task("Заголовок1", "Описание1");
         task1.setId(1);
         Task task2 = new Task("Заголовок2", "Описание2");
