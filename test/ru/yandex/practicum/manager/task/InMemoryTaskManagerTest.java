@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import ru.yandex.practicum.manager.task.*;
 import ru.yandex.practicum.models.*;
 
 class InMemoryTaskManagerTest {
@@ -19,7 +18,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void epicShouldNotBeAddedToEpicWithSameId() {
+    void add_shouldNotBeAdded_withSameId() {
         Epic epic = new Epic("Заголовок эпика", "Описание эпика");
         taskManager.addEpic(epic);
         int epicId = epic.getId();
@@ -32,7 +31,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void subtaskShouldNotBeAddedToSubtaskWithSameId() {
+    void addSubtask_shouldNotBeAdded_withSameId() {
         Subtask subtask = new Subtask("Заголовок подзадачи", "Описание подзадачи", 1);
         int epicId = subtask.getEpicId();
         taskManager.addSubtask(subtask);
@@ -41,7 +40,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void canAddAndGetDifferentTasks() {
+    void addTask_returnSameTask() {
         Task task = new Task("Заголовок задачи", "Описание задачи");
         taskManager.addTask(task);
 
@@ -49,7 +48,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void canAddAndGetDifferentEpics() {
+    void addEpic_returnSameEpic() {
         Epic epic = new Epic("Заголовок эпика", "Описание эпика");
         taskManager.addEpic(epic);
 
@@ -57,7 +56,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void canAddAndGetDifferentSubtasks() {
+    void addSubtask_returnSameSubtask() {
         Epic epic = new Epic("Заголовок эпика для подзадачи", "Описание эпика для подзадачи");
         taskManager.addEpic(epic);
         Subtask subtask = new Subtask("Заголовок подзадачи", "Описание подзадачи", 1);
@@ -67,7 +66,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void givenIdTaskAndGeneratedIdTaskShouldNotConflict() {
+    void addTask_generatedIdTaskShouldNotConflict() {
         Task givenIdTask = new Task("Заголовок задачи с заданным ID", "Описание задачи");
         givenIdTask.setId(10);
         taskManager.addTask(givenIdTask);
@@ -81,7 +80,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkTaskPersistanceAfterAdding(){
+    void getTask_checkTaskPersistence_afterAdding(){
         Task task = new Task("Заголовок задачи", "Описание задачи");
         taskManager.addTask(task);
 
