@@ -33,18 +33,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task addTask(Task task) {
+    public void addTask(Task task) {
         if (task.getId() == null) {
             task.setId(generateId());
         }
         tasks.put(task.getId(), task);
-        return task;
     }
 
     @Override
-    public Task updateTask(Task newTask) {
+    public void updateTask(Task newTask) {
         tasks.put(newTask.getId(), newTask);
-        return newTask;
     }
 
     @Override
@@ -69,16 +67,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic addEpic(Epic epic) {
-        epic.setId(generateId());
+    public void addEpic(Epic epic) {
+        if (epic.getId() == null) {
+            epic.setId(generateId());
+        }
         epics.put(epic.getId(), epic);
-        return epic;
     }
 
     @Override
-    public Epic updateEpic(Epic newEpic) {
+    public void updateEpic(Epic newEpic) {
         epics.put(newEpic.getId(), newEpic);
-        return newEpic;
     }
 
     @Override
@@ -110,11 +108,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask addSubtask(Subtask subtask) {
+    public void addSubtask(Subtask subtask) {
         Integer epicId = subtask.getEpicId();
         Epic epic = epics.get(epicId);
-        if (epic == null) {
-            return null;
+        if (epicId == null) {
+            return;
         }
 
         Integer subtaskId = subtask.getId();
@@ -122,21 +120,19 @@ public class InMemoryTaskManager implements TaskManager {
             subtaskId = generateId();
         }
         if (subtaskId.equals(epicId)) {
-            return null;
+            return;
         }
         subtask.setId(subtaskId);
         subtasks.put(subtaskId, subtask);
 
         epic.getSubtasksId().add(subtaskId);
         updateEpicStatus(epic);
-        return subtask;
     }
 
     @Override
-    public Subtask updateSubtask(Subtask newSubtask) {
+    public void updateSubtask(Subtask newSubtask) {
         subtasks.put(newSubtask.getId(), newSubtask);
         updateEpicStatus(epics.get(newSubtask.getEpicId()));
-        return newSubtask;
     }
 
     @Override

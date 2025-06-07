@@ -10,9 +10,9 @@ public interface TaskManager {
 
     void deleteAllTasks();
 
-    Task addTask(Task task);
+    void addTask(Task task);
 
-    Task updateTask(Task newTask);
+    void updateTask(Task newTask);
 
     void deleteTask(Integer id);
 
@@ -20,9 +20,9 @@ public interface TaskManager {
 
     void deleteAllEpics();
 
-    Epic addEpic(Epic epic);
+    void addEpic(Epic epic);
 
-    Epic updateEpic(Epic newEpic);
+    void updateEpic(Epic newEpic);
 
     void deleteEpic(Integer id);
 
@@ -30,9 +30,9 @@ public interface TaskManager {
 
     void deleteAllSubtasks();
 
-    Subtask addSubtask(Subtask subtask);
+    void addSubtask(Subtask subtask);
 
-    Subtask updateSubtask(Subtask newSubtask);
+    void updateSubtask(Subtask newSubtask);
 
     void deleteSubtask(Integer id);
 

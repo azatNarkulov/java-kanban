@@ -1,6 +1,10 @@
 package ru.yandex.practicum.models;
 
+import ru.yandex.practicum.manager.task.Type;
+
 import java.util.Objects;
+
+import static ru.yandex.practicum.manager.task.Type.TASK;
 
 public class Task {
     private Integer id;
@@ -18,6 +22,13 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+    }
+
+    public Task(Integer id, String title, String description, Status status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
     }
 
     public Task(Task anotherTask) {
@@ -74,6 +85,10 @@ public class Task {
 
     public Task copy() {
         return new Task(this);
+    }
+
+    public Type getType() {
+        return TASK;
     }
 
     @Override
