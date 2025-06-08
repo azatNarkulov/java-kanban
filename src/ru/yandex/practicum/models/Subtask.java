@@ -1,7 +1,6 @@
 package ru.yandex.practicum.models;
 
-import ru.yandex.practicum.manager.task.Type;
-import static ru.yandex.practicum.manager.task.Type.SUBTASK;
+import static ru.yandex.practicum.models.TaskType.SUBTASK;
 
 public class Subtask extends Task {
     private Integer epicId;
@@ -11,9 +10,8 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public Subtask(Integer id, String title, String description, Status status, Integer epicId) {
+    public Subtask(Integer id, String title, String description, Status status) {
         super(id, title, description, status);
-        this.epicId = epicId;
     }
 
     public Subtask(Subtask anotherSubtask) {
@@ -25,13 +23,34 @@ public class Subtask extends Task {
         return epicId;
     }
 
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
+    }
+
     @Override
     public Subtask copy() {
         return new Subtask(this);
     }
 
     @Override
-    public Type getType() {
+    public TaskType getTaskType() {
         return SUBTASK;
+    }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "id=" + getId() +
+                ", title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
+                ", epicId=" + getEpicId() +
+                '}';
+    }
+
+    @Override
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s,%s",
+                getId(), getTaskType(), getTitle(), getStatus(), getDescription(), getEpicId());
     }
 }

@@ -13,14 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends InMemoryTaskManagerTest {
     FileBackedTaskManager manager;
     File file;
 
+    @Override
     @BeforeEach
     void beforeEach() throws IOException {
+        taskManager = new InMemoryTaskManager();
         file = File.createTempFile("test", ".csv");
-        manager = new FileBackedTaskManager(file);
+        manager = FileBackedTaskManager.loadFromFile(file);
     }
 
     @AfterEach

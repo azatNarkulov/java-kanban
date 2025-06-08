@@ -1,10 +1,8 @@
 package ru.yandex.practicum.models;
 
-import ru.yandex.practicum.manager.task.Type;
-
 import java.util.Objects;
 
-import static ru.yandex.practicum.manager.task.Type.TASK;
+import static ru.yandex.practicum.models.TaskType.TASK;
 
 public class Task {
     private Integer id;
@@ -87,8 +85,13 @@ public class Task {
         return new Task(this);
     }
 
-    public Type getType() {
+    public TaskType getTaskType() {
         return TASK;
+    }
+
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s,",
+                getId(), getTaskType(), getTitle(), getStatus(), getDescription());
     }
 
     @Override

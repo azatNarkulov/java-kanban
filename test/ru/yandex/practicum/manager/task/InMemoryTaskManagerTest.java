@@ -9,11 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import ru.yandex.practicum.models.*;
 
+import java.io.IOException;
+
 class InMemoryTaskManagerTest {
     InMemoryTaskManager taskManager;
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws IOException {
         taskManager = new InMemoryTaskManager();
     }
 

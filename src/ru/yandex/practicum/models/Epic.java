@@ -1,7 +1,6 @@
 package ru.yandex.practicum.models;
 
-import ru.yandex.practicum.manager.task.Type;
-import static ru.yandex.practicum.manager.task.Type.EPIC;
+import static ru.yandex.practicum.models.TaskType.EPIC;
 
 import java.util.ArrayList;
 
@@ -32,7 +31,17 @@ public class Epic extends Task {
     }
 
     @Override
-    public Type getType() {
+    public TaskType getTaskType() {
         return EPIC;
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "id=" + getId() +
+                ", title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
+                '}';
     }
 }
