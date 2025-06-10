@@ -39,9 +39,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> lines = Files.readAllLines(file.toPath());
             for (int i = 1; i < lines.size(); i++) {
                 Task task = CsvConverter.fromString(lines.get(i));
-                if (task.getId() > manager.id) {
-                    manager.id = task.getId() + 1;
-                }
+                checkId(task, manager);
                 switch (task.getTaskType()) {
                     case TASK:
                         manager.tasks.put(task.getId(), task);
@@ -65,6 +63,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             throw new ManagerSaveException("Возникла ошибка при загрузке");
         }
         return manager;
+    }
+
+    private static void checkId(Task task, FileBackedTaskManager manager) {
+        if (task.getId() > manager.id) {
+            manager.id = task.getId() + 1;
+        }
     }
 
     @Override

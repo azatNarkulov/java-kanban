@@ -33,12 +33,20 @@ public class CsvConverter {
 
     public static String taskToLine(Task task) {
         return String.format("%d,%s,%s,%s,%s,",
-                task.getId(), TASK, task.getTitle(), task.getStatus(), task.getDescription());
+                task.getId(),
+                TASK,
+                task.getTitle(),
+                task.getStatus(),
+                task.getDescription());
     }
 
     public static String taskToLine(Epic epic) {
         return String.format("%d,%s,%s,%s,%s,",
-                epic.getId(), EPIC, epic.getTitle(), epic.getStatus(), epic.getDescription());
+                epic.getId(),
+                EPIC,
+                epic.getTitle(),
+                epic.getStatus(),
+                epic.getDescription());
     }
 
     public static String taskToLine(Subtask subtask) {
