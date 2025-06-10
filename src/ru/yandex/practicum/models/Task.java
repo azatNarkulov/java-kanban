@@ -2,6 +2,8 @@ package ru.yandex.practicum.models;
 
 import java.util.Objects;
 
+import static ru.yandex.practicum.models.TaskType.TASK;
+
 public class Task {
     private Integer id;
     private String title;
@@ -18,6 +20,13 @@ public class Task {
         this.title = title;
         this.description = description;
         this.status = Status.NEW;
+    }
+
+    public Task(Integer id, String title, String description, Status status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
     }
 
     public Task(Task anotherTask) {
@@ -74,6 +83,15 @@ public class Task {
 
     public Task copy() {
         return new Task(this);
+    }
+
+    public TaskType getTaskType() {
+        return TASK;
+    }
+
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s,",
+                getId(), getTaskType(), getTitle(), getStatus(), getDescription());
     }
 
     @Override
