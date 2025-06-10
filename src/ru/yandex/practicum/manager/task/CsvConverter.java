@@ -2,6 +2,10 @@ package ru.yandex.practicum.manager.task;
 
 import ru.yandex.practicum.models.*;
 
+import static ru.yandex.practicum.models.TaskType.TASK;
+import static ru.yandex.practicum.models.TaskType.EPIC;
+import static ru.yandex.practicum.models.TaskType.SUBTASK;
+
 public class CsvConverter {
     public static Task fromString(String value) {
         String[] parts = value.split(",");
@@ -27,7 +31,23 @@ public class CsvConverter {
         }
     }
 
-    public static String toStringFromTask(Task task) {
-        return task.toCsvString();
+    public static String taskToLine(Task task) {
+        return String.format("%d,%s,%s,%s,%s,",
+                task.getId(), TASK, task.getTitle(), task.getStatus(), task.getDescription());
+    }
+
+    public static String taskToLine(Epic epic) {
+        return String.format("%d,%s,%s,%s,%s,",
+                epic.getId(), EPIC, epic.getTitle(), epic.getStatus(), epic.getDescription());
+    }
+
+    public static String taskToLine(Subtask subtask) {
+        return String.format("%d,%s,%s,%s,%s,%s",
+                subtask.getId(),
+                SUBTASK,
+                subtask.getTitle(),
+                subtask.getStatus(),
+                subtask.getDescription(),
+                subtask.getEpicId());
     }
 }

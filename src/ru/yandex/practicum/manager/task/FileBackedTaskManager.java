@@ -20,13 +20,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("id,type,name,status,description,epic\n");
             for (Task task : getAllTasks()) {
-                writer.write(CsvConverter.toStringFromTask(task) + "\n");
+                writer.write(CsvConverter.taskToLine(task) + "\n");
             }
             for (Epic epic : getAllEpics()) {
-                writer.write(CsvConverter.toStringFromTask(epic) + "\n");
+                writer.write(CsvConverter.taskToLine(epic) + "\n");
             }
             for (Subtask subtask : getAllSubtasks()) {
-                writer.write(CsvConverter.toStringFromTask(subtask) + "\n");
+                writer.write(CsvConverter.taskToLine(subtask) + "\n");
             }
         } catch (IOException exp) {
             throw new ManagerSaveException("Возникла ошибка при сохранении");
@@ -39,22 +39,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             List<String> lines = Files.readAllLines(file.toPath());
             for (int i = 1; i < lines.size(); i++) {
                 Task task = CsvConverter.fromString(lines.get(i));
+                if (task.getId() > manager.id) {
+                    manager.id = task.getId() + 1;
+                }
                 switch (task.getTaskType()) {
                     case TASK:
-                        manager.updateTask(task);
+                        manager.tasks.put(task.getId(), task);
                         break;
                     case EPIC:
-                        manager.updateEpic((Epic) task);
+                        manager.epics.put(task.getId(), (Epic) task);
                         break;
                     case SUBTASK:
                         Subtask subtask = (Subtask) task;
-                        Epic epic = manager.getEpic(subtask.getEpicId());
-                        epic.getSubtasksId().add(subtask.getId());
-                        manager.updateSubtask(subtask);
+                        manager.subtasks.put(subtask.getId(), subtask);
                         break;
                     default:
                         throw new IllegalArgumentException("Неизвестный тип задачи: " + task.getTaskType());
                 }
+            }
+            for (Subtask subtask : manager.subtasks.values()) {
+                // добавляем все подзадачи в эпики
+                manager.epics.get(subtask.getEpicId()).getSubtasksId().add(subtask.getId());
             }
         } catch (IOException exp) {
             throw new ManagerSaveException("Возникла ошибка при загрузке");
@@ -155,13 +160,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(file);
 
-        for (Task task : loadManager.getAllTasks()) {
+        for (Task task : loadManager.tasks.values()) {
             System.out.println(task.toString());
         }
-        for (Epic epic : loadManager.getAllEpics()) {
+        for (Epic epic : loadManager.epics.values()) {
             System.out.println(epic.toString());
         }
-        for (Subtask subtask : loadManager.getAllSubtasks()) {
+        for (Subtask subtask : loadManager.subtasks.values()) {
             System.out.println(subtask.toString());
         }
     }
