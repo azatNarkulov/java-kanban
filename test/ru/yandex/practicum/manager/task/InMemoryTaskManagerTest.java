@@ -3,13 +3,15 @@ package ru.yandex.practicum.manager.task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static ru.yandex.practicum.models.Status.*;
+import static java.time.Month.JUNE;
 
 import ru.yandex.practicum.models.*;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 class InMemoryTaskManagerTest {
     InMemoryTaskManager taskManager;
@@ -92,5 +94,94 @@ class InMemoryTaskManagerTest {
         assertEquals(task.getTitle(), receivedTask.getTitle());
         assertEquals(task.getDescription(), receivedTask.getDescription());
         assertEquals(task.getStatus(), receivedTask.getStatus());
+    }
+
+    @Test
+    void getStatus_returnEpicStatusNew_ifAllSubtasksAreNew() {
+        Epic epic = new Epic(1, "Заголовок эпика", "Описание эпика");
+        taskManager.addEpic(epic);
+        Subtask subtask1 = new Subtask(2, "Заголовок подзадачи №2", "Описание подзадачи №2", NEW, 1);
+        taskManager.addSubtask(subtask1);
+        Subtask subtask2 = new Subtask(3, "Заголовок подзадачи №3", "Описание подзадачи №3", NEW, 1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(NEW, taskManager.epics.get(epic.getId()).getStatus());
+    }
+
+    @Test
+    void getStatus_returnEpicStatusDone_ifAllSubtasksAreDone() {
+        Epic epic = new Epic(1, "Заголовок эпика", "Описание эпика");
+        taskManager.addEpic(epic);
+        Subtask subtask1 = new Subtask(2, "Заголовок подзадачи №2", "Описание подзадачи №2", DONE, 1);
+        taskManager.addSubtask(subtask1);
+        Subtask subtask2 = new Subtask(3, "Заголовок подзадачи №3", "Описание подзадачи №3", DONE, 1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(DONE, taskManager.epics.get(epic.getId()).getStatus());
+    }
+
+    @Test
+    void getStatus_returnEpicStatusInProgress_ifSubtasksAreNewAndDone() {
+        Epic epic = new Epic(1, "Заголовок эпика", "Описание эпика");
+        taskManager.addEpic(epic);
+        Subtask subtask1 = new Subtask(2, "Заголовок подзадачи №2", "Описание подзадачи №2", NEW, 1);
+        taskManager.addSubtask(subtask1);
+        Subtask subtask2 = new Subtask(3, "Заголовок подзадачи №3", "Описание подзадачи №3", DONE, 1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(IN_PROGRESS, taskManager.epics.get(epic.getId()).getStatus());
+    }
+
+    @Test
+    void getStatus_returnEpicStatusInProgress_ifAllSubtasksAreInProgress() {
+        Epic epic = new Epic(1, "Заголовок эпика", "Описание эпика");
+        taskManager.addEpic(epic);
+        Subtask subtask1 = new Subtask(2, "Заголовок подзадачи №2", "Описание подзадачи №2", IN_PROGRESS, 1);
+        taskManager.addSubtask(subtask1);
+        Subtask subtask2 = new Subtask(3, "Заголовок подзадачи №3", "Описание подзадачи №3", IN_PROGRESS, 1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(IN_PROGRESS, taskManager.epics.get(epic.getId()).getStatus());
+    }
+
+    @Test
+    void addSubtask_returnNull_ifEpicDoesNotExist() {
+        Subtask subtask = new Subtask(1, "Заголовок подзадачи", "Описание подзадачи");
+        Subtask result = taskManager.addSubtask(subtask);
+
+        assertNull(result);
+    }
+
+    @Test
+    void tasksOverlap_returnTrue_ifTasksOverlap() {
+        Task task1 = new Task(1, "Заголовок задачи №1", "Описание задачи №1",
+                NEW, LocalDateTime.of(2025, JUNE, 21, 20, 45), Duration.ofMinutes(15));
+        Task task2 = new Task(2, "Заголовок задачи №2", "Описание задачи №2",
+                NEW, LocalDateTime.of(2025, JUNE, 21, 20, 50), Duration.ofMinutes(15));
+
+        assertTrue(taskManager.tasksOverlap(task1, task2));
+    }
+
+    @Test
+    void tasksOverlap_returnFalse_ifTasksDoNotOverlap() {
+        Task task1 = new Task(1, "Заголовок задачи №1", "Описание задачи №1",
+                NEW, LocalDateTime.of(2025, JUNE, 21, 20, 45), Duration.ofMinutes(15));
+        Task task2 = new Task(2, "Заголовок задачи №2", "Описание задачи №2",
+                NEW, LocalDateTime.of(2025, JUNE, 21, 21, 15), Duration.ofMinutes(15));
+
+        assertFalse(taskManager.tasksOverlap(task1, task2));
+    }
+
+    @Test
+    void addTask_throwException_ifTasksOverlap() {
+        Task task1 = new Task(1, "Заголовок задачи №1", "Описание задачи №1",
+                NEW, LocalDateTime.of(2025, JUNE, 21, 20, 45), Duration.ofMinutes(15));
+        taskManager.addTask(task1);
+        Task task2 = new Task(2, "Заголовок задачи №2", "Описание задачи №2",
+                NEW, LocalDateTime.of(2025, JUNE, 21, 20, 50), Duration.ofMinutes(15));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            taskManager.addTask(task2);
+        }, "Задача пересекается по времени с другой задачей");
     }
 }

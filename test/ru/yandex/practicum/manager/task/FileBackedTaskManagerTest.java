@@ -9,9 +9,12 @@ import ru.yandex.practicum.models.Task;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.time.Month.JUNE;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManagerTest extends InMemoryTaskManagerTest {
     FileBackedTaskManager manager;
@@ -37,13 +40,13 @@ public class FileBackedTaskManagerTest extends InMemoryTaskManagerTest {
 
     @Test
     void loadFromFile_shouldLoadSavedTasks() {
-        Task task = new Task("Задача", "Описание задачи");
+        Task task = new Task(1, "Задача", "Описание задачи", LocalDateTime.of(2025, JUNE, 21, 21,40), Duration.ofMinutes(15));
         manager.addTask(task);
 
-        Epic epic = new Epic("Эпик", "Описание эпика");
+        Epic epic = new Epic(2, "Эпик", "Описание эпика", LocalDateTime.of(2025, JUNE, 21, 22,40), Duration.ofMinutes(15));
         manager.addEpic(epic);
 
-        Subtask subtask = new Subtask("Подзадача", "Описание подзадачи", epic.getId());
+        Subtask subtask = new Subtask(3, "Подзадача", "Описание подзадачи", LocalDateTime.of(2025, JUNE, 21, 23,40), Duration.ofMinutes(15), epic.getId());
         manager.addSubtask(subtask);
 
         FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(file);

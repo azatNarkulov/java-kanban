@@ -1,5 +1,7 @@
 package ru.yandex.practicum.models;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static ru.yandex.practicum.models.TaskType.TASK;
@@ -9,6 +11,8 @@ public class Task {
     private String title;
     private String description;
     private Status status;
+    private LocalDateTime startTime;
+    private Duration duration;
 
     public Task(String title, String description, Status status) {
         this.title = title;
@@ -22,11 +26,35 @@ public class Task {
         this.status = Status.NEW;
     }
 
+    public Task(Integer id, String title, String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+    }
+
     public Task(Integer id, String title, String description, Status status) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(Integer id, String title, String description, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(Integer id, String title, String description,
+                Status status, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(Task anotherTask) {
@@ -94,6 +122,29 @@ public class Task {
                 getId(), getTaskType(), getTitle(), getStatus(), getDescription());
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -101,6 +152,8 @@ public class Task {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
                 '}';
     }
 }
