@@ -1,9 +1,9 @@
 package ru.yandex.practicum.manager.history;
 
 import org.junit.jupiter.api.BeforeEach;
-import ru.yandex.practicum.models.*;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
+import ru.yandex.practicum.models.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +16,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void add_removeOldFromHistory_addedTaskExistingInHistory() {
+    void add_removeOldTaskFromHistory_addedTaskExistingInHistory() {
         Task task = new Task("Заголовок задачи", "Описание задачи");
         task.setId(1);
         historyManager.add(task);
@@ -24,7 +24,7 @@ class InMemoryHistoryManagerTest {
         Task newTask = task.copy();
         newTask.setTitle("Изменённый заголовок");
         historyManager.add(newTask);
-        Task testTask = historyManager.getHistory().get(0);
+        Task testTask = historyManager.getHistory().getFirst();
 
         assertEquals(newTask, testTask);
     }
@@ -53,7 +53,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void size_equals0_ifHistoryIsEmpty() {
+    void getHistorySize_equals0_historyIsEmpty() {
         assertEquals(0, historyManager.getHistory().size());
     }
 

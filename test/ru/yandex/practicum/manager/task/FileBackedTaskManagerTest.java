@@ -3,6 +3,7 @@ package ru.yandex.practicum.manager.task;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ru.yandex.practicum.models.Epic;
 import ru.yandex.practicum.models.Subtask;
 import ru.yandex.practicum.models.Task;
@@ -34,12 +35,12 @@ public class FileBackedTaskManagerTest extends InMemoryTaskManagerTest {
     }
 
     @Test
-    void getAllTasks_shouldBeEmpty_ifFileIsEmpty() {
+    void getAllTasks_isEmpty_fileIsEmpty() {
         assertTrue(manager.getAllTasks().isEmpty());
     }
 
     @Test
-    void loadFromFile_shouldLoadSavedTasks() {
+    void loadFromFile_loadSavedTasks() {
         Task task = new Task(1, "Задача", "Описание задачи", LocalDateTime.of(2025, JUNE, 21, 21,40), Duration.ofMinutes(15));
         manager.addTask(task);
 

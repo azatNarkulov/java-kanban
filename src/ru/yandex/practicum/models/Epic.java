@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtasksId = new ArrayList<>();
+    private ArrayList<Subtask> subtasks = new ArrayList<>(); // вместо id подзадач теперь хранятся сами подзадачи
     private LocalDateTime endTime;
 
     public Epic(String title, String description) {
@@ -16,10 +16,6 @@ public class Epic extends Task {
 
     public Epic(Integer id, String title, String description) {
         super(id, title, description);
-    }
-
-    public Epic(Integer id, String title, String description, Status status) {
-        super(id, title, description, status);
     }
 
     public Epic(Integer id, String title, String description,
@@ -34,11 +30,11 @@ public class Epic extends Task {
 
     public Epic(Epic anotherEpic) {
         super(anotherEpic);
-        this.subtasksId = anotherEpic.getSubtasksId();
+        this.subtasks = anotherEpic.getSubtasks();
     }
 
-    public ArrayList<Integer> getSubtasksId() {
-        return subtasksId;
+    public ArrayList<Subtask> getSubtasks() {
+        return subtasks;
     }
 
     public void setEndTime(LocalDateTime endTime) {
@@ -65,5 +61,18 @@ public class Epic extends Task {
                 ", startTime=" + getStartTime() +
                 ", duration=" + getDuration() +
                 '}';
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        ArrayList<Subtask> epicSubtasks = getSubtasks();
+        endTime = epicSubtasks.getFirst().getEndTime(); // получаем endTime первой подзадачи
+        for (int i = 1; i < epicSubtasks.size(); i++) {
+            Subtask subtask = epicSubtasks.get(i);
+            if (subtask.getEndTime() != null && subtask.getEndTime().isAfter(endTime)) {
+                endTime = subtask.getEndTime();
+            }
+        }
+        return endTime;
     }
 }

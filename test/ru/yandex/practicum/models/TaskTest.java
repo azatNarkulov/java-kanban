@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TaskTest {
     @Test
-    void setId_returnSameTasks_ifIdAreEquals() {
+    void setId_tasksAreEquals_idsAreEqual() {
         Task task1 = new Task("Заголовок1", "Описание1");
         task1.setId(1);
         Task task2 = new Task("Заголовок2", "Описание2");
