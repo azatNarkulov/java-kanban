@@ -64,15 +64,7 @@ public class Epic extends Task {
     }
 
     @Override
-    public LocalDateTime getEndTime() {
-        ArrayList<Subtask> epicSubtasks = getSubtasks();
-        endTime = epicSubtasks.getFirst().getEndTime(); // получаем endTime первой подзадачи
-        for (int i = 1; i < epicSubtasks.size(); i++) {
-            Subtask subtask = epicSubtasks.get(i);
-            if (subtask.getEndTime() != null && subtask.getEndTime().isAfter(endTime)) {
-                endTime = subtask.getEndTime();
-            }
-        }
+    public LocalDateTime getEndTime() { // просто возвращаем endTime
         return endTime;
     }
 }
