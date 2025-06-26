@@ -31,7 +31,7 @@ class InMemoryTaskManagerTest {
         subtask.setId(epicId);
         taskManager.addSubtask(subtask);
 
-        assertFalse(taskManager.getEpic(epicId).getSubtasks().contains(subtask));
+        assertFalse(taskManager.getEpic(epicId).getSubtasksId().contains(subtask.getId()));
     }
 
     @Test

@@ -55,7 +55,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
             for (Subtask subtask : manager.subtasks.values()) {
-                manager.epics.get(subtask.getEpicId()).getSubtasks().add(subtask);
+                manager.epics.get(subtask.getEpicId()).getSubtasksId().add(subtask.getId());
             }
         } catch (IOException exp) {
             throw new ManagerSaveException("Возникла ошибка при загрузке");

@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected HashMap<Integer, Task> tasks = new HashMap<Integer, Task>();
-    protected HashMap<Integer, Epic> epics = new HashMap<Integer, Epic>();
-    protected HashMap<Integer, Subtask> subtasks = new HashMap<Integer, Subtask>();
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epics = new HashMap<>();
+    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
     protected Integer id = 1;
     private HistoryManager historyManager;
     private TreeSet<Task> prioritizedTasks;
@@ -111,9 +111,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic == null) {
             return;
         }
-        for (Subtask subtask : epic.getSubtasks()) {
-            subtasks.remove(subtask.getId());
-            historyManager.remove(subtask.getId());
+        for (Integer subtaskId : epic.getSubtasksId()) {
+            subtasks.remove(subtaskId);
+            historyManager.remove(subtaskId);
         }
         epics.remove(id);
         historyManager.remove(id);
@@ -129,7 +129,8 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             deleteSubtasksFromHistory(epic);
             clearSubtasksFromEpic(epic);
-            for (Subtask subtask : epic.getSubtasks()) {
+            for (Integer subtaskId : epic.getSubtasksId()) {
+                Subtask subtask = subtasks.get(subtaskId);
                 if (subtask.getStartTime() != null) {
                     prioritizedTasks.remove(subtask);
                 }
@@ -159,7 +160,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getStatus() == null) {
             subtask.setStatus(Status.NEW);
         }
-        epic.getSubtasks().add(subtask);
+        epic.getSubtasksId().add(subtaskId);
         updateEpicFields(epic);
         if (subtask.getStartTime() != null) {
             prioritizedTasks.add(subtask);
@@ -182,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtask(Integer id) {
         Subtask subtask = subtasks.get(id);
         Epic epic = epics.get(subtask.getEpicId());
-        epic.getSubtasks().remove(subtask);
+        epic.getSubtasksId().remove((Object) id);
 
         subtasks.remove(id);
         updateEpicFields(epic);
@@ -228,7 +229,11 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public ArrayList<Subtask> getAllSubtasksFromEpic(Integer id) {
-        return new ArrayList<>(epics.get(id).getSubtasks());
+        ArrayList<Subtask> allSubtasks = new ArrayList<>();
+        for (Integer subtaskId : epics.get(id).getSubtasksId()) {
+            allSubtasks.add(subtasks.get(subtaskId));
+        }
+        return allSubtasks;
     }
 
     private Status getEpicStatus(Epic epic) {
@@ -265,13 +270,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void updateEpicTime(Epic epic) {
-        ArrayList<Subtask> epicSubtasks = epic.getSubtasks();
-        Subtask firstSubtask = epicSubtasks.getFirst();
+        ArrayList<Integer> epicSubtasks = epic.getSubtasksId();
+        Subtask firstSubtask = subtasks.get(epicSubtasks.getFirst());
         Duration epicDuration = firstSubtask.getDuration();
         LocalDateTime minEpicStartTime = firstSubtask.getStartTime();
         LocalDateTime maxEpicEndTime = firstSubtask.getEndTime();
         for (int i = 1; i < epicSubtasks.size(); i++) {
-            Subtask subtask = epicSubtasks.get(i);
+            Subtask subtask = subtasks.get(epicSubtasks.get(i));
             if (subtask.getStartTime() != null && subtask.getStartTime().isBefore(minEpicStartTime)) {
                 minEpicStartTime = subtask.getStartTime();
             }
@@ -299,13 +304,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void clearSubtasksFromEpic(Epic epic) {
-        epic.getSubtasks().clear();
+        epic.getSubtasksId().clear();
         updateEpicFields(epic);
     }
 
     private void deleteSubtasksFromHistory(Epic epic) {
-        for (Subtask subtask : epic.getSubtasks()) {
-            historyManager.remove(subtask.getId());
+        for (Integer subtaskId : epic.getSubtasksId()) {
+            historyManager.remove(subtaskId);
         }
     }
 

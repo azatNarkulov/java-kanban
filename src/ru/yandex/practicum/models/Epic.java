@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> subtasks = new ArrayList<>(); // вместо id подзадач теперь хранятся сами подзадачи
+    private ArrayList<Integer> subtasksId = new ArrayList<>(); // вместо id подзадач теперь хранятся сами подзадачи
     private LocalDateTime endTime;
 
     public Epic(String title, String description) {
@@ -30,11 +30,11 @@ public class Epic extends Task {
 
     public Epic(Epic anotherEpic) {
         super(anotherEpic);
-        this.subtasks = anotherEpic.getSubtasks();
+        this.subtasksId = anotherEpic.getSubtasksId();
     }
 
-    public ArrayList<Subtask> getSubtasks() {
-        return subtasks;
+    public ArrayList<Integer> getSubtasksId() {
+        return subtasksId;
     }
 
     public void setEndTime(LocalDateTime endTime) {
