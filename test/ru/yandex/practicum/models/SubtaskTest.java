@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SubtaskTest {
     @Test
-    void setId_returnSameSubtasks_ifIdAreEquals() {
+    void setId_subtasksAreEquals_idsAreEqual() {
         Subtask subtask1 = new Subtask("Заголовок1", "Описание1", 1);
         subtask1.setId(1);
         Subtask subtask2 = new Subtask("Заголовок2", "Описание2", 1);

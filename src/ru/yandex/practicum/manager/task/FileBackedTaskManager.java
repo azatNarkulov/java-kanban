@@ -1,7 +1,6 @@
 package ru.yandex.practicum.manager.task;
 
 import ru.yandex.practicum.models.*;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -18,7 +17,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,startTime,duration,epic\n");
             for (Task task : getAllTasks()) {
                 writer.write(CsvConverter.taskToLine(task) + "\n");
             }
@@ -56,7 +55,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
             for (Subtask subtask : manager.subtasks.values()) {
-                // добавляем все подзадачи в эпики
                 manager.epics.get(subtask.getEpicId()).getSubtasksId().add(subtask.getId());
             }
         } catch (IOException exp) {

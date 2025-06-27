@@ -1,17 +1,22 @@
 package ru.yandex.practicum.manager.history;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
 import ru.yandex.practicum.models.*;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
 class InMemoryHistoryManagerTest {
+    HistoryManager historyManager;
+
+    @BeforeEach
+    void beforeEach() {
+        historyManager = new InMemoryHistoryManager();
+    }
 
     @Test
-    void add_removeOldFromHistory_addedTaskExistingInHistory() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
+    void add_removeOldTaskFromHistory_addedTaskExistingInHistory() {
         Task task = new Task("Заголовок задачи", "Описание задачи");
         task.setId(1);
         historyManager.add(task);
@@ -19,14 +24,13 @@ class InMemoryHistoryManagerTest {
         Task newTask = task.copy();
         newTask.setTitle("Изменённый заголовок");
         historyManager.add(newTask);
-        Task testTask = historyManager.getHistory().get(0);
+        Task testTask = historyManager.getHistory().getFirst();
 
         assertEquals(newTask, testTask);
     }
 
     @Test
     void add_addToMap() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
         Task task = new Task("Заголовок задачи", "Описание задачи");
         task.setId(1);
         historyManager.add(task);
@@ -36,7 +40,6 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void remove_removeFromHistory() {
-        HistoryManager historyManager = new InMemoryHistoryManager();
         Task task = new Task("Заголовок задачи", "Описание задачи");
         task.setId(1);
         historyManager.add(task);
@@ -47,5 +50,61 @@ class InMemoryHistoryManagerTest {
         ArrayList<Task> tasks2 = historyManager.getHistory();
 
         assertNotEquals(tasks1, tasks2);
+    }
+
+    @Test
+    void getHistorySize_equals0_historyIsEmpty() {
+        assertEquals(0, historyManager.getHistory().size());
+    }
+
+    @Test
+    void remove_removeFromBeginningOfHistory() {
+        Task taskInTheBeginning = new Task(1,"Заголовок задачи №1", "Описание задачи №1");
+        historyManager.add(taskInTheBeginning);
+        Task taskInTheMiddle = new Task(2,"Заголовок задачи №2", "Описание задачи №2");
+        historyManager.add(taskInTheMiddle);
+        Task taskInTheEnd = new Task(3,"Заголовок задачи №3", "Описание задачи №3");
+        historyManager.add(taskInTheEnd);
+
+        ArrayList<Task> tasksBeforeRemove = historyManager.getHistory();
+
+        historyManager.remove(taskInTheBeginning.getId());
+        ArrayList<Task> tasksAfterRemove = historyManager.getHistory();
+
+        assertNotEquals(tasksBeforeRemove, tasksAfterRemove);
+    }
+
+    @Test
+    void remove_removeFromMiddleOfHistory() {
+        Task taskInTheBeginning = new Task(1,"Заголовок задачи №1", "Описание задачи №1");
+        historyManager.add(taskInTheBeginning);
+        Task taskInTheMiddle = new Task(2,"Заголовок задачи №2", "Описание задачи №2");
+        historyManager.add(taskInTheMiddle);
+        Task taskInTheEnd = new Task(3,"Заголовок задачи №3", "Описание задачи №3");
+        historyManager.add(taskInTheEnd);
+
+        ArrayList<Task> tasksBeforeRemove = historyManager.getHistory();
+
+        historyManager.remove(taskInTheMiddle.getId());
+        ArrayList<Task> tasksAfterRemove = historyManager.getHistory();
+
+        assertNotEquals(tasksBeforeRemove, tasksAfterRemove);
+    }
+
+    @Test
+    void remove_removeFromEndOfHistory() {
+        Task taskInTheBeginning = new Task(1,"Заголовок задачи №1", "Описание задачи №1");
+        historyManager.add(taskInTheBeginning);
+        Task taskInTheMiddle = new Task(2,"Заголовок задачи №2", "Описание задачи №2");
+        historyManager.add(taskInTheMiddle);
+        Task taskInTheEnd = new Task(3,"Заголовок задачи №3", "Описание задачи №3");
+        historyManager.add(taskInTheEnd);
+
+        ArrayList<Task> tasksBeforeRemove = historyManager.getHistory();
+
+        historyManager.remove(taskInTheEnd.getId());
+        ArrayList<Task> tasksAfterRemove = historyManager.getHistory();
+
+        assertNotEquals(tasksBeforeRemove, tasksAfterRemove);
     }
 }
