@@ -39,6 +39,13 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String title, String description, LocalDateTime startTime, Duration duration) {
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
     public Task(Integer id, String title, String description, LocalDateTime startTime, Duration duration) {
         this.id = id;
         this.title = title;
@@ -50,6 +57,15 @@ public class Task {
     public Task(Integer id, String title, String description,
                 Status status, LocalDateTime startTime, Duration duration) {
         this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(String title, String description,
+                Status status, LocalDateTime startTime, Duration duration) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -115,11 +131,6 @@ public class Task {
 
     public TaskType getTaskType() {
         return TASK;
-    }
-
-    public String toCsvString() {
-        return String.format("%d,%s,%s,%s,%s,",
-                getId(), getTaskType(), getTitle(), getStatus(), getDescription());
     }
 
     public LocalDateTime getStartTime() {

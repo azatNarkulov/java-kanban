@@ -36,6 +36,12 @@ public class Subtask extends Task {
         super(id, title, description, status, startTime, duration);
     }
 
+    public Subtask(String title, String description, Integer epicId,
+                   LocalDateTime startTime, Duration duration) {
+        super(title, description, startTime, duration);
+        this.epicId = epicId;
+    }
+
     public Subtask(Integer id, String title, String description,
                    LocalDateTime startTime, Duration duration, Integer epicId) {
         super(id, title, description, startTime, duration);
@@ -76,11 +82,5 @@ public class Subtask extends Task {
                 ", startTime=" + getStartTime() +
                 ", duration=" + getDuration() +
                 '}';
-    }
-
-    @Override
-    public String toCsvString() {
-        return String.format("%d,%s,%s,%s,%s,%s",
-                getId(), getTaskType(), getTitle(), getStatus(), getDescription(), getEpicId());
     }
 }
