@@ -4,6 +4,7 @@ import ru.yandex.practicum.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
     ArrayList<Task> getAllTasks();
@@ -43,4 +44,8 @@ public interface TaskManager {
     Epic getEpic(Integer id);
 
     List<Task> getHistory();
+
+    TreeSet<Task> getPrioritizedTasks();
+
+    ArrayList<Integer> getEpicSubtasks(Integer id);
 }

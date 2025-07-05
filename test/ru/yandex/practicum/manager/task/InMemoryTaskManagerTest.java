@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.yandex.practicum.models.Status.*;
 import static java.time.Month.JUNE;
 
+import ru.yandex.practicum.exceptions.HasIntersectionsException;
+import ru.yandex.practicum.exceptions.NotFoundException;
 import ru.yandex.practicum.models.*;
 
 import java.io.IOException;
@@ -148,7 +150,7 @@ class InMemoryTaskManagerTest {
     void addSubtask_doNotAdd_epicDoesNotExist() {
         Subtask subtask = new Subtask(1, "Заголовок подзадачи", "Описание подзадачи");
 
-        assertNull(taskManager.addSubtask(subtask));
+        assertThrows(NotFoundException.class, () -> taskManager.addSubtask(subtask), "Задача не найдена");
     }
 
     @Test
@@ -170,7 +172,7 @@ class InMemoryTaskManagerTest {
         Task task2 = new Task(2, "Заголовок задачи №2", "Описание задачи №2",
                 NEW, LocalDateTime.of(2025, JUNE, 21, 20, 50), Duration.ofMinutes(15));
 
-        assertThrows(IllegalArgumentException.class, () -> taskManager.addTask(task2), "Задача пересекается по времени с другой задачей");
+        assertThrows(HasIntersectionsException.class, () -> taskManager.addTask(task2), "Задача пересекается по времени с другой задачей");
     }
 
     @Test
@@ -208,7 +210,7 @@ class InMemoryTaskManagerTest {
         Subtask subtask2 = new Subtask(3, "Заголовок подзадачи №2", "Описание подзадачи №2",
                 LocalDateTime.of(2025, JUNE, 21, 20, 50), Duration.ofMinutes(15), epic.getId());
 
-        assertThrows(IllegalArgumentException.class, () -> taskManager.addSubtask(subtask2), "Задача пересекается по времени с другой задачей");
+        assertThrows(HasIntersectionsException.class, () -> taskManager.addSubtask(subtask2), "Задача пересекается по времени с другой задачей");
     }
 
     @Test

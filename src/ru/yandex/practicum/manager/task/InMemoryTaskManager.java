@@ -1,5 +1,7 @@
 package ru.yandex.practicum.manager.task;
 
+import ru.yandex.practicum.exceptions.HasIntersectionsException;
+import ru.yandex.practicum.exceptions.NotFoundException;
 import ru.yandex.practicum.manager.history.*;
 import ru.yandex.practicum.manager.Managers;
 import ru.yandex.practicum.models.*;
@@ -67,11 +69,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTask(Integer id) {
         historyManager.remove(id);
-        tasks.remove(id);
         Task task = tasks.get(id);
         if (task.getStartTime() != null) {
             prioritizedTasks.remove(task);
         }
+        tasks.remove(id);
     }
 
     @Override
@@ -145,7 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
         Integer epicId = subtask.getEpicId();
         Epic epic = epics.get(epicId);
         if (epicId == null) {
-            return null;
+            throw new NotFoundException();
         }
 
         Integer subtaskId = subtask.getId();
@@ -197,7 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTask(Integer id) {
         Task task = tasks.get(id);
         if (task == null) {
-            return task;
+            throw new NotFoundException();
         }
         historyManager.add(task);
         return task;
@@ -207,7 +209,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtask(Integer id) {
         Subtask subtask = subtasks.get(id);
         if (subtask == null) {
-            return subtask;
+            throw new NotFoundException();
         }
         historyManager.add(subtask);
         return subtask;
@@ -217,7 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpic(Integer id) {
         Epic epic = epics.get(id);
         if (epic == null) {
-            return epic;
+            throw new NotFoundException();
         }
         historyManager.add(epic);
         return epic;
@@ -271,27 +273,33 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void updateEpicTime(Epic epic) {
         ArrayList<Integer> epicSubtasks = epic.getSubtasksId();
-        Subtask firstSubtask = subtasks.get(epicSubtasks.getFirst());
-        Duration epicDuration = firstSubtask.getDuration();
-        LocalDateTime minEpicStartTime = firstSubtask.getStartTime();
-        LocalDateTime maxEpicEndTime = firstSubtask.getEndTime();
-        for (int i = 1; i < epicSubtasks.size(); i++) {
-            Subtask subtask = subtasks.get(epicSubtasks.get(i));
-            if (subtask.getStartTime() != null && subtask.getStartTime().isBefore(minEpicStartTime)) {
-                minEpicStartTime = subtask.getStartTime();
+        if (epicSubtasks.isEmpty()) {
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            epic.setDuration(null);
+        } else {
+            Subtask firstSubtask = subtasks.get(epicSubtasks.getFirst());
+            Duration epicDuration = firstSubtask.getDuration();
+            LocalDateTime minEpicStartTime = firstSubtask.getStartTime();
+            LocalDateTime maxEpicEndTime = firstSubtask.getEndTime();
+            for (int i = 1; i < epicSubtasks.size(); i++) {
+                Subtask subtask = subtasks.get(epicSubtasks.get(i));
+                if (subtask.getStartTime() != null && subtask.getStartTime().isBefore(minEpicStartTime)) {
+                    minEpicStartTime = subtask.getStartTime();
+                }
+                if (subtask.getEndTime() != null && subtask.getEndTime().isAfter(maxEpicEndTime)) {
+                    maxEpicEndTime = subtask.getEndTime();
+                }
+                if (epicDuration != null) {
+                    epicDuration = epicDuration.plus(subtask.getDuration());
+                } else {
+                    epic.setDuration(subtask.getDuration());
+                }
             }
-            if (subtask.getEndTime() != null && subtask.getEndTime().isAfter(maxEpicEndTime)) {
-                maxEpicEndTime = subtask.getEndTime();
-            }
-            if (epicDuration != null) {
-                epicDuration = epicDuration.plus(subtask.getDuration());
-            } else {
-                epic.setDuration(subtask.getDuration());
-            }
+            epic.setStartTime(minEpicStartTime);
+            epic.setEndTime(maxEpicEndTime);
+            epic.setDuration(epicDuration);
         }
-        epic.setStartTime(minEpicStartTime);
-        epic.setEndTime(maxEpicEndTime); // здесь проставляем endTime
-        epic.setDuration(epicDuration);
     }
 
     private void updateEpicFields(Epic epic) {
@@ -314,12 +322,15 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    @Override
     public TreeSet<Task> getPrioritizedTasks() {
         return prioritizedTasks;
     }
 
     private boolean isTaskOverlap(Task task1, Task task2) {
-        if (task1.getId().equals(task2.getId())) {
+        if (task1.getId() != null &&
+                task2.getId() != null &&
+                task1.getId().equals(task2.getId())) {
             return false;
         }
         return !(task1.getEndTime().isBefore(task2.getStartTime()) ||
@@ -337,7 +348,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     private void checkOverlap(Task task) {
         if (isTaskOverlap(task)) {
-            throw new IllegalArgumentException("Задача пересекается по времени с другой задачей");
+            throw new HasIntersectionsException();
         }
+    }
+
+    @Override
+    public ArrayList<Integer> getEpicSubtasks(Integer id) {
+        Epic epic = epics.get(id);
+        if (epic == null) {
+            throw new NotFoundException();
+        }
+        return epic.getSubtasksId();
     }
 }
